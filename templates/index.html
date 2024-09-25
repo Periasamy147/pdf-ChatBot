@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ChatBot</title>
+        <link rel="icon" type="image/x-icon" href="./images/backup-bg.png">
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div>
+            <div class="top-bar">
+                <img src="./images/my_image.jpg" alt="Company Logo">
+                <h1>Innovators <span style="color:#d3002f;">GPT</span></h1>
+            </div>
+
+            <h1>Upload Knowledge Base</h1>
+            <div class="file-portion">
+                <form id="uploadForm" method="POST" enctype="multipart/form-data" action="/upload">
+                    <input id="fileInput" type="file" name="file" required>
+                    <input type="submit" value="Upload">
+                </form>
+                <div id="error-message" style="color: #d3002f; margin-top: 10px; display: none;"></div>
+                <div id="uploadError" style="color: #d3002f; margin-top: 10px; display: none;"></div> <!-- Upload error message -->
+            </div>
+
+            <div id="response" style="display: none;"></div> <!-- Initially hidden -->
+
+            <div class="chat-box">
+                <input type="text" id="query" placeholder="Enter your question" onkeydown="checkKey(event)">
+                <button id="askButton" onclick="askQuestion()">Ask</button> <!-- Button is active only after upload -->
+            </div>
+
+            <script>
+                let fileUploaded = false; // Variable to track if a file has been uploaded
+
+                document.getElementById('uploadForm').addEventListener('submit', function (e) {
+                    const fileInput = document.getElementById('fileInput');
+                    const errorMessage = document.getElementById('error-message');
+                    const uploadError = document.getElementById('uploadError');
+
+                    if (!fileInput.value) {
+                        e.preventDefault(); // Prevent form submission
+                        errorMessage.textContent = 'Please select a file to upload.';
+                        errorMessage.style.display = 'block'; // Show error message
+                        fileUploaded = false; // Ensure the fileUploaded flag is false
+                    } else {
+                        errorMessage.style.display = 'none'; // Hide error if file is selected
+                        fileUploaded = true; // Set the flag to true
+                        uploadError.style.display = 'none'; // Hide the upload error message if a file is uploaded
+                    }
+                });
+
+                function askQuestion() {
+                    let query = document.getElementById('query').value;
+                    let responseDiv = document.getElementById('response');
+                    const uploadError = document.getElementById('uploadError');
+
+                    if (!fileUploaded) {
+                        uploadError.textContent = 'Please upload a file before asking a question.';
+                        uploadError.style.display = 'block'; // Show upload error message
+                        responseDiv.style.display = 'none'; // Hide response container if there is an error
+                        return;
+                    }
+
+                    if (query.trim() === "") {
+                        responseDiv.classList.remove('show'); // Remove the class if the query is empty
+                        return;
+                    }
+
+                    fetch('/api/ask', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ query: query })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        responseDiv.innerText = data.answer;
+                        responseDiv.style.display = "block"; // Show the response container
+                        setTimeout(() => {
+                            responseDiv.classList.add('show'); // Add the class to trigger the animation
+                        }, 10); // Small timeout to allow rendering before the animation
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        responseDiv.innerText = "An error occurred. Please try again.";
+                        responseDiv.style.display = "block";
+                        setTimeout(() => {
+                            responseDiv.classList.add('show');
+                        }, 10);
+                    });
+                }
+
+                function checkKey(event) {
+                    if (event.key === "Enter") {
+                        askQuestion(); // Call askQuestion function when "Enter" is pressed
+                    }
+                }
+            </script>
+        </div>
+    </body>
+</html>

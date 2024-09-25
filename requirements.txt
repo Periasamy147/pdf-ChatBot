@@ -1,0 +1,10 @@
+blinker
+pypdf2
+click    
+regex
+flask
+typing_extensions
+itsdangerous
+werkzeug
+nltk
+
