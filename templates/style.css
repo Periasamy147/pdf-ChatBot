@@ -1,6 +1,6 @@
 /* General body styles */
 body,html {
-    font-family: 'Lora', serif;
+    /* font-family: 'Lora', serif; */
     color: #333;
     margin: 0;
     padding: 0;
@@ -33,7 +33,7 @@ body,html {
 
 /* Header styling for the top bar */
 .top-bar h1 {
-    font-family: 'Montserrat', sans-serif;
+    /* font-family: 'Montserrat', sans-serif; */
     font-size: 35px;
     margin: 0;
     display: inline-block;
@@ -43,7 +43,7 @@ body,html {
 
 /* Form section styling */
 h1 {
-    font-family: 'Montserrat', sans-serif;
+    /* font-family: 'Montserrat', sans-serif; */
     font-size: 28px;
     color: #444;
     margin-bottom: 20px;
@@ -111,7 +111,7 @@ input[type="submit"]:hover {
 
 /* Style for the header */
 h1 {
-    font-family: 'Montserrat', sans-serif;
+    /* font-family: 'Montserrat', sans-serif; */
     font-size: 28px;
     color: #333;
     text-align: center; /* Center the header */
